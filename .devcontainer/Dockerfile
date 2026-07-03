@@ -15,6 +15,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
        x11vnc \
        onboard \
        fluxbox \
-       novnc \
-       python3-websockify \
+       python3 python3-pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Python-based noVNC support and websockify
+RUN python3 -m pip install --no-cache-dir websockify==0.10.0

@@ -29,7 +29,14 @@ if ! pgrep -f "x11vnc.*-rfbport 5900" >/dev/null 2>&1; then
 fi
 
 if ! pgrep -f "websockify --web" >/dev/null 2>&1; then
-  websockify --web /usr/share/novnc/ 6080 localhost:5900 &
+  if [ ! -d "/opt/novnc" ]; then
+    echo "Downloading noVNC..."
+    mkdir -p /opt/novnc
+    wget -q https://github.com/novnc/noVNC/archive/refs/tags/v1.6.0.tar.gz -O /tmp/novnc.tar.gz
+    tar -xzf /tmp/novnc.tar.gz -C /opt/novnc --strip-components=1
+    rm /tmp/novnc.tar.gz
+  fi
+  websockify --web /opt/novnc 6080 localhost:5900 &
   sleep 2
   echo "Started noVNC web server on port 6080"
 fi
