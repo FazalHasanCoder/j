@@ -3,12 +3,6 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {
-    "ghcr.io/devcontainers/features/desktop-lite:1": {
-      "password": "vscode",
-      "webPort": "6080"
-    }
-  },
   "forwardPorts": [6080],
   "portsAttributes": {
     "6080": {
@@ -23,5 +17,6 @@
       ]
     }
   },
-  "postCreateCommand": "chmod +x .devcontainer/setup-godot.sh && bash .devcontainer/setup-godot.sh"
+  "postCreateCommand": "chmod +x .devcontainer/setup-godot.sh .devcontainer/start-vnc.sh && bash .devcontainer/setup-godot.sh && bash .devcontainer/start-vnc.sh",
+  "postStartCommand": "bash .devcontainer/start-vnc.sh"
 }
