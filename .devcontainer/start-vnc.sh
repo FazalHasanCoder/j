@@ -1,17 +1,37 @@
 #!/bin/bash
 set -e
 
-# Start a VNC server on display :1, no desktop session management needed.
-# This will provide an explicit port 5901 for raw VNC, which can help Codespaces port forwarding.
+export DISPLAY=:0
 
-if pgrep -x x11vnc >/dev/null; then
-  echo "x11vnc already running"
-  exit 0
+start_process() {
+  local cmd="$1"
+  if ! pgrep -f "$cmd" >/dev/null 2>&1; then
+    bash -lc "$cmd"
+  fi
+}
+
+if ! pgrep -f "Xvfb :0" >/dev/null 2>&1; then
+  Xvfb :0 -screen 0 1920x1080x24 &
+  sleep 2
+  echo "Started Xvfb :0"
 fi
 
-# Start x11vnc on display :0 for browser access via noVNC or raw VNC.
-# Use a fixed port in the container (5900) and allow connections without a password for Codespaces internal forwarding.
+if ! pgrep -f "fluxbox" >/dev/null 2>&1; then
+  fluxbox &
+  sleep 2
+  echo "Started fluxbox"
+fi
 
-x11vnc -display :0 -nopw -forever -shared -rfbport 5900 -bg
+if ! pgrep -f "x11vnc.*-rfbport 5900" >/dev/null 2>&1; then
+  x11vnc -display :0 -nopw -forever -shared -rfbport 5900 -bg
+  sleep 2
+  echo "Started x11vnc on port 5900"
+fi
 
-echo "x11vnc started on port 5900"
+if ! pgrep -f "websockify --web" >/dev/null 2>&1; then
+  websockify --web /usr/share/novnc/ 6080 localhost:5900 &
+  sleep 2
+  echo "Started noVNC web server on port 6080"
+fi
+
+echo "Desktop environment ready. Access noVNC on port 6080 or VNC on port 5900."
