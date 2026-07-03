@@ -1,4 +1,5 @@
 .godot/
+project.godot
 *.import
 *.importing
 *.godot.user
