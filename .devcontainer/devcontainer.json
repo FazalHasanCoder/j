@@ -25,30 +25,3 @@
   },
   "postCreateCommand": "chmod +x .devcontainer/setup-godot.sh && bash .devcontainer/setup-godot.sh"
 }
-{
-  "name": "Godot 4.5 Stable Codespace",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/desktop-lite:1": {
-      "password": "vscode",
-      "webPort": "6080"
-    }
-  },
-  "forwardPorts": [6080],
-  "portsAttributes": {
-    "6080": {
-      "label": "noVNC Desktop",
-      "onAutoForward": "openBrowser"
-    }
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "geequlim.godot-tools"
-      ]
-    }
-  },
-  "postCreateCommand": "bash .devcontainer/setup-godot.sh"
-}
